@@ -1,0 +1,196 @@
+{% extends "layout.html" %}
+
+{% block title %}Expense Graphs{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h1 class="text-center">Expense Graphs</h1>
+            
+            <h3 class="text-center">Line Chart</h3>
+            <canvas id="lineChart" width="400" height="200"></canvas>
+
+            <h3 class="text-center mt-4">Bar Chart</h3>
+            <canvas id="barChart" width="400" height="200"></canvas>
+
+            <h3 class="text-center mt-4">Pie Chart</h3>
+            <canvas id="pieChart" width="400" height="200"></canvas>
+
+            <div class="text-center mt-4">
+                <button id="exportPdf" class="btn btn-secondary btn-lg">Export Charts to PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    fetch('/expense_data')
+        .then(response => response.json())
+        .then(data => {
+            const ctxLine = document.getElementById('lineChart').getContext('2d');
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            const ctxPie = document.getElementById('pieChart').getContext('2d');
+            
+            const labels = data.map(expense => expense.date);
+            const amounts = data.map(expense => expense.amount);
+            const categories = [...new Set(data.map(expense => expense.category))]; // Unique categories
+            const categoryAmounts = categories.map(category => 
+                data.filter(expense => expense.category === category)
+                    .reduce((sum, expense) => sum + expense.amount, 0)
+            );
+
+            // Line Chart
+            const lineChart = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Expenses Over Time',
+                        data: amounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Bar Chart
+            const totalCategoryAmount = categoryAmounts.reduce((sum, amount) => sum + amount, 0);
+            const barChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        label: 'Expenses by Category',
+                        data: categoryAmounts,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true }
+                    },
+                    plugins: {
+                        datalabels: {
+                            formatter: (value) => {
+                                return ((value / totalCategoryAmount) * 100).toFixed(2) + '%';
+                            },
+                            color: '#000',
+                            anchor: 'end',
+                            align: 'start',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]  // Ensure this is included
+            });
+
+            // Calculate percentages for pie chart
+            const totalAmount = categoryAmounts.reduce((sum, amount) => sum + amount, 0);
+            const categoryPercentages = categoryAmounts.map(amount => ((amount / totalAmount) * 100).toFixed(2));
+
+            // Pie Chart
+            const pieChart = new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        label: 'Expenses by Category',
+                        data: categoryAmounts,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                let percentage = (value * 100 / sum).toFixed(2) + "%";
+                                return percentage;
+                            },
+                            color: '#000',  // Dark color for better readability
+                            font: {
+                                size: 14,
+                                weight: 'bold'  // Bold font for consistency
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]  // Ensure this is included
+            });
+
+            // Export charts to PDF
+            document.getElementById('exportPdf').addEventListener('click', async () => {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('landscape');
+
+                const charts = [
+                    { canvas: document.getElementById('lineChart'), title: 'Line Chart' },
+                    { canvas: document.getElementById('barChart'), title: 'Bar Chart' },
+                    { canvas: document.getElementById('pieChart'), title: 'Pie Chart' }
+                ];
+
+                for (let i = 0; i < charts.length; i++) {
+                    const chart = charts[i];
+                    const canvas = await html2canvas(chart.canvas);
+                    const imgData = canvas.toDataURL('image/png');
+                    pdf.addImage(imgData, 'PNG', 10, 10, 280, 150);  // Adjust the position and size to fit one chart per page
+                    pdf.text(chart.title, 10, 170);
+                    if (i < charts.length - 1) {
+                        pdf.addPage();
+                    }
+                }
+
+                pdf.save('expense_charts.pdf');
+            });
+        });
+</script>
+{% endblock %}

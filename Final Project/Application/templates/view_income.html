@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}View Income{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h1 class="text-center">Your Income</h1>
+            
+            <!-- Display list of income if any -->
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Amount ({{ selected_currency }})</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in income_entries %}
+                    <tr>
+                        <td>{{ entry.source }}</td>
+                        <td>{{ entry.converted_amount | format_currency(selected_currency) }}</td>
+                        <td>{{ entry.date }}</td>
+                        <td>{{ entry.category }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_income', income_id=entry.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="text-center mt-3"><a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

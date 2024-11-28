@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+
+{% block title %}View Expenses{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h1 class="text-center">Your Expenses</h1>
+            
+            <!-- Notification Div -->
+            <div id="notification" class="alert alert-danger" role="alert" style="display: none;">
+                <strong>Warning:</strong> You have exceeded your budget for a category!
+            </div>
+
+            <!-- Button for showing shared expenses -->
+            <div class="text-center mb-4">
+                <a href="{{ url_for('view_shared_expenses') }}" class="btn btn-secondary">Show Shared Expenses</a>
+            </div>
+
+            <!-- Filtering and Sorting Form -->
+            <form method="POST" class="mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="category">Category:</label>
+                        <select class="form-control" id="category" name="category">
+                            <option value="All">All</option>
+                            {% for category in categories %}
+                            <option value="{{ category }}">{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_date">End Date:</label>
+                        <input type="date" class="form-control" id="end_date" name="end_date">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="sort_by">Sort By:</label>
+                        <select class="form-control" id="sort_by" name="sort_by">
+                            <option value="date">Date</option>
+                            <option value="amount">Amount</option>
+                            <option value="category">Category</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Filter and Sort</button>
+            </form>
+
+            <!-- Display list of expenses if any -->
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Amount ({{ selected_currency }})</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Recurring</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.title }}</td>
+                        <td>{{ expense.converted_amount }}</td>
+                        <td>{{ expense.date }}</td>
+                        <td>{{ expense.category }}</td>
+                        <td>{{ expense.is_recurring }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_expense', expense_id=expense.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                            <a href="{{ url_for('share_expense', expense_id=expense.id) }}" class="btn btn-secondary btn-sm">Share</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p class="text-center mt-3"><a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    var budgetExceeded = {{ session.get('budget_exceeded', False) | tojson | safe }};
+    if (budgetExceeded) {
+        var notificationDiv = document.getElementById('notification');
+        notificationDiv.style.display = 'block';
+
+        // Hide the notification after a few seconds and ensure it's stored in the database
+        setTimeout(function() {
+            notificationDiv.style.display = 'none';
+        }, 5000);  // Hide after 5 seconds
+    }
+});
+</script>
+{% endblock %}
