@@ -1,6 +1,6 @@
 Expense Tracker Web Application
 
-Demo Video:- https://youtu.be/XiZLyqCHWVg
+Demo Video:- https://youtu.be/QKeGjSqJGvM
 
 Description:
 The Expense Tracker Web Application is a robust and user-friendly platform designed to assist users in efficiently managing their financial transactions. It empowers users to monitor their expenses, track income, set monthly budgets, and receive alerts for overspending. The application features a clean, intuitive interface and leverages Flask for backend operations and SQLite for database management.
