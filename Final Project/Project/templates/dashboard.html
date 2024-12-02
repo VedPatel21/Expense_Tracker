@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="text-center">
+        <h2>Welcome, {{ user.username }}!</h2>
+        <p>Manage your expenses, income, budgets, and more from here.</p>
+    </div>
+
+    <!-- Financial Overview Section -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Income</h5>
+                    <p class="card-text">{{ total_income | default(0) }} {{ currency }}</p>
+                    <a href="{{ url_for('view_income') }}" class="btn btn-primary btn-sm">View Income</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Expenses</h5>
+                    <p class="card-text">{{ total_expenses | default(0) }} {{ currency }}</p>
+                    <a href="{{ url_for('view_expenses') }}" class="btn btn-primary btn-sm">View Expenses</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons for All Features -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <a href="{{ url_for('add_expense') }}" class="btn btn-success btn-block">Add Expense</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('view_expenses') }}" class="btn btn-primary btn-block">View Expenses</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('add_income') }}" class="btn btn-success btn-block">Add Income</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('view_income') }}" class="btn btn-primary btn-block">View Income</a>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <a href="{{ url_for('set_budget') }}" class="btn btn-warning btn-block">Set Budget</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('view_budgets') }}" class="btn btn-info btn-block">View Budgets</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('generate_report') }}" class="btn btn-dark btn-block">Generate Report</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('import_expenses') }}" class="btn btn-primary btn-block">Import Expenses</a>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <a href="{{ url_for('view_recurring_expenses') }}" class="btn btn-secondary btn-block">View Recurring Expenses</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('export_expenses') }}" class="btn btn-success btn-block">Export Expenses</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ url_for('notifications') }}" class="btn btn-info btn-block">View Notifications</a>
+        </div>
+    </div>
+
+    <!-- Recent Expenses Section -->
+    {% if expenses %}
+    <div class="mt-4">
+        <h4>Recent Expenses</h4>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Amount ({{ currency }})</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.title }}</td>
+                    <td>{{ expense.amount }}</td>
+                    <td>{{ expense.date }}</td>
+                    <td>{{ expense.category }}</td>
+                    <td>
+                        <a href="{{ url_for('share_expense', expense_id=expense.id) }}" class="btn btn-danger btn-sm">Share</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('view_expenses') }}" class="btn btn-link">View All Expenses</a>
+    </div>
+    {% else %}
+    <p class="mt-4">You have no recorded expenses. Start adding your expenses now!</p>
+    {% endif %}
+
+    <!-- Notifications Section -->
+    {% if notifications %}
+    <div class="mt-4">
+        <h4>Notifications</h4>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Message</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for notification in notifications %}
+                <tr>
+                    <td>{{ notification.timestamp.split(' ')[0] }}</td>
+                    <td>{{ notification.message }}</td>
+                    <td>
+                        <form action="{{ url_for('delete_notification', notification_id=notification.id) }}" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="mt-4">No notifications at the moment.</p>
+    {% endif %}
+</div>
+{% endblock %}

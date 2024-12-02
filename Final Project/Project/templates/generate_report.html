@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}Generate Expense Report{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3>Generate Expense Report</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="form-group">
+                                <label for="report_type">Select Report Type:</label>
+                                <select id="report_type" name="report_type" class="form-control" required>
+                                    <option value="pdf">PDF</option>
+                                    <option value="excel">Excel</option>
+                                </select>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="report_currency">Select Currency:</label>
+                                <select id="report_currency" name="report_currency" class="form-control" required>
+                                    <option value="currencies" disabled selected>Select currencies</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="JPY">JPY</option>
+                                    <option value="INR">INR</option>
+                                    <!-- Add more currencies as needed -->
+                                </select>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="start_date">Start Date:</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date" required>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="end_date">End Date:</label>
+                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg mt-4">Generate Report</button>
+                        </form>
+                        <div class="mt-4 text-center">
+                            <a href="{{ url_for('generate_graphical_report') }}" class="btn btn-secondary btn-lg">Generate Graphical Report</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

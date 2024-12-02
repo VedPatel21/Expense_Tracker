@@ -1,0 +1,157 @@
+/* General Body Styling */
+body {
+    background-color: #121212; /* Dark background for reduced eye strain */
+    color: #e0e0e0; /* Light gray for better readability on dark backgrounds */
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Navbar and Footer Styling */
+.navbar, .footer {
+    background-color: #1f1f1f; /* Slightly lighter dark tone for separation */
+    color: #e0e0e0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.navbar a, .footer a {
+    color: #1a73e8; /* Accent color for links */
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar a:hover, .footer a:hover {
+    background-color: #333333; /* Subtle hover effect */
+    color: #ffffff;
+}
+
+/* Card Styling */
+.card {
+    background-color: #1e1e1e; /* Consistent dark tone for cards */
+    color: #e0e0e0;
+    border: 1px solid #333333; /* Subtle border for definition */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
+}
+
+/* Form Styling */
+.form-control {
+    background-color: #222222; /* Slightly lighter tone for input fields */
+    color: #e0e0e0;
+    border: 1px solid #444444;
+    padding: 10px;
+    border-radius: 5px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+    border-color: #1a73e8; /* Accent color for focus state */
+    box-shadow: 0 0 8px rgba(26, 115, 232, 0.5); /* Subtle blue glow */
+}
+
+/* Button Styling */
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #1a73e8; /* Google blue for modern appearance */
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #1765cc; /* Slightly darker blue for hover */
+    box-shadow: 0 4px 8px rgba(26, 115, 232, 0.3); /* Glow effect */
+}
+
+.btn-secondary {
+    background-color: #555555; /* Neutral gray for secondary actions */
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background-color: #444444; /* Darker gray for hover */
+}
+
+/* Alerts */
+.alert {
+    background-color: #333333; /* Darker tone for alerts */
+    color: #e0e0e0;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.alert-success {
+    background-color: #28a745; /* Green for success */
+    color: #ffffff;
+}
+
+.alert-error {
+    background-color: #dc3545; /* Red for error */
+    color: #ffffff;
+}
+
+/* Table Styling for Dark Mode */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: #e0e0e0; /* Default text color for the table */
+}
+
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #333333; /* Subtle border */
+}
+
+th {
+    background-color: #1f1f1f; /* Darker header for distinction */
+    color: #1a73e8; /* Bright color for headers */
+}
+
+td {
+    background-color: #1e1e1e; /* Consistent dark background */
+    color: #ffffff; /* Bright white for visibility */
+}
+
+/* Hover Effect for Rows */
+table tbody tr:hover {
+    background-color: #333333; /* Highlighted row for focus */
+    color: #ffffff; /* Ensure text remains visible */
+}
+
+/* Footer Styling */
+footer {
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+    padding: 15px 0;
+    text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .navbar, .footer {
+        text-align: center;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

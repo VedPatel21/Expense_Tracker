@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <!-- Welcome Section -->
+    <h1>Welcome to Your Expense Tracker</h1>
+    <p>
+        {% if session.get('user_id') %}
+        Hello, {{ session.get('user_id') }}! Start managing your expenses below.
+        {% else %}
+        Please <a href="{{ url_for('login') }}">Login</a> or 
+        <a href="{{ url_for('register') }}">Register</a> to start managing your expenses.
+        {% endif %}
+    </p>
+
+    <!-- Key Features -->
+    <h3 class="mt-4">Features</h3>
+    <ul style="list-style-type: none; padding: 0;">
+        <li>✔ Track and categorize your expenses</li>
+        <li>✔ Set monthly budgets to control spending</li>
+        <li>✔ View simple reports to understand your finances</li>
+        <li>✔ Manage recurring expenses easily</li>
+        <li>✔ Get notifications for budget updates</li>
+        <li>✔ Switch to dark mode for comfortable viewing</li>
+    </ul>
+</div>
+{% endblock %}
